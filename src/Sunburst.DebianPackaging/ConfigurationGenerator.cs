@@ -1,5 +1,6 @@
 using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using Sunburst.Json;
 
@@ -57,6 +58,49 @@ namespace Sunburst.DebianPackaging
             formattedDate.Append(" +0000");
 
             return formattedDate.ToString();
+        }
+
+        public ConfigurationGenerator(JsonDictionary config_data)
+        {
+            ConfigurationData = config_data;
+            MyAssembly = typeof(ConfigurationGenerator).Assembly;
+        }
+
+        private readonly JsonDictionary ConfigurationData;
+        private readonly Assembly MyAssembly;
+
+        private string GetTemplate(string templateName)
+        {
+            using (StreamReader reader = new StreamReader(MyAssembly.GetManifestResourceStream(templateName)))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        private void GenerateRules(FileInfo file)
+        {
+            JsonArray ignoredDependencies = (JsonArray)ConfigurationData.TryGetValue("debian_ignored_dependencies", null);
+            StringBuilder overrideText = new StringBuilder();
+
+            if (ignoredDependencies != null)
+            {
+                overrideText.Append("override_dh_shlibdeps:\n");
+                overrideText.Append("\tdh_shlibdeps --dpkg-shlibdeps-params=\"");
+
+                foreach (JsonObject obj in ignoredDependencies)
+                {
+                    JsonString depName = (JsonString)obj;
+                    overrideText.AppendFormat("-x{0} ", depName.Value);
+                }
+
+                overrideText.Append("\"\n");
+            }
+
+            using (var writer = new StreamWriter(file.Open(FileMode.Create)))
+            {
+                string data = GetTemplate("rules.tpl").Format(("overrides", overrideText.ToString()));
+                writer.Write(data);
+            }
         }
     }
 }
