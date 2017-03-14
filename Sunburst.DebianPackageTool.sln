@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BA229CAB-632
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunburst.Json", "src\Sunburst.Json\Sunburst.Json.csproj", "{6B188393-4552-460C-B41F-22FACA88604D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunburst.DebianPackageTool", "src\Sunburst.DebianPackageTool\Sunburst.DebianPackageTool.csproj", "{1DE7C93D-F096-4225-B5D7-22C7E171E79E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunburst.DebianPackaging", "src\Sunburst.DebianPackaging\Sunburst.DebianPackaging.csproj", "{1DE7C93D-F096-4225-B5D7-22C7E171E79E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
