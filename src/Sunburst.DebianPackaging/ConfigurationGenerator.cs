@@ -15,7 +15,6 @@ namespace Sunburst.DebianPackaging
             DateTime utcDate = date.ToUniversalTime();
             StringBuilder formattedDate = new StringBuilder();
 
-            // strftime format: %a, %d %b %Y %H:%M:%S %z
             switch (utcDate.DayOfWeek)
             {
                 case DayOfWeek.Sunday: formattedDate.Append("Sun"); break;
