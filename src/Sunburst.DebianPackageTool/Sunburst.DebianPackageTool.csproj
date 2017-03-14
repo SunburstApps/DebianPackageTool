@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources/*" LogicalName="%(FileName)%(Extension)" />
     <ProjectReference Include="../Sunburst.Json/Sunburst.Json.csproj" />
   </ItemGroup>
 </Project>
