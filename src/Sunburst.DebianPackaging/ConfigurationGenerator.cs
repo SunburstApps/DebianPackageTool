@@ -77,7 +77,7 @@ namespace Sunburst.DebianPackaging
             }
         }
 
-        private void GenerateRules(FileInfo file)
+        private void GenerateRulesFile(FileInfo file)
         {
             JsonArray ignoredDependencies = (JsonArray)ConfigurationData.TryGetValue("debian_ignored_dependencies", null);
             StringBuilder overrideText = new StringBuilder();
