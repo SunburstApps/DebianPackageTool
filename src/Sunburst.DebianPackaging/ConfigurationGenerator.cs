@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Sunburst.Json;
@@ -60,6 +62,29 @@ namespace Sunburst.DebianPackaging
             return formattedDate.ToString();
         }
 
+        private static string FormatDependentPackageString(JsonDictionary dependencyData)
+        {
+            if (dependencyData == null) return string.Empty;
+
+            List<string> dependencies = new List<string>();
+            foreach (KeyValuePair<string, JsonObject> pair in dependencyData)
+            {
+                string dep_str = pair.Key;
+
+                JsonDictionary value = (JsonDictionary)pair.Value;
+                JsonObject dependencyVersionObj = value.TryGetValue("package_version", null);
+                if (dependencyVersionObj != null)
+                {
+                    dep_str += $" (>= {((JsonString)dependencyVersionObj).Value})";
+                }
+
+                dependencies.Add(dep_str);
+            }
+
+            // The leading comma is important here.
+            return ", " + string.Join(", ", dependencies);
+        }
+
         public ConfigurationGenerator(JsonDictionary config_data)
         {
             ConfigurationData = config_data;
@@ -68,6 +93,17 @@ namespace Sunburst.DebianPackaging
 
         private readonly JsonDictionary ConfigurationData;
         private readonly Assembly MyAssembly;
+
+        private string GetConfigString(string key) => GetConfigString(key, null) ?? throw new KeyNotFoundException(key);
+        private string GetConfigString(string key, string defaultValue) => GetJsonStringValue(ConfigurationData, key, defaultValue);
+        private string GetJsonStringValue(JsonDictionary dict, string key) => GetJsonStringValue(dict, key, null) ?? throw new KeyNotFoundException(key);
+
+        private string GetJsonStringValue(JsonDictionary dict, string key, string defaultValue)
+        {
+            JsonObject obj = dict[key];
+            if (obj == null) return defaultValue;
+            else return ((JsonString)obj).Value;
+        }
 
         private string GetTemplate(string templateName)
         {
@@ -99,6 +135,80 @@ namespace Sunburst.DebianPackaging
             using (var writer = new StreamWriter(file.Open(FileMode.Create)))
             {
                 string data = GetTemplate("rules.tpl").Format(("overrides", overrideText.ToString()));
+                writer.Write(data);
+            }
+        }
+
+        private void GenerateChangeLog(FileInfo file, string versionOverride = null, string nameOverride = null)
+        {
+            JsonDictionary releaseData = (JsonDictionary)ConfigurationData["release"];
+
+            var templateParameters = new(string, string)[]
+            {
+                ("PACKAGE_VERSION", versionOverride ?? GetJsonStringValue(releaseData, "package_version")),
+                ("PACKAGE_REVISION", GetJsonStringValue(releaseData, "package_revision")),
+                ("CHANGELOG_MESSAGE", GetJsonStringValue(releaseData, "changelog_message")),
+                ("URGENCY", GetJsonStringValue(releaseData, "urgency", "low")),
+
+                ("PACKAGE_NAME", nameOverride ?? GetConfigString("package_name")),
+                ("MAINTAINER_NAME", GetConfigString("maintainer_name")),
+                ("MAINTAINER_EMAIL", GetConfigString("maintainer_email")),
+                ("DATE", FormatChangelogDate(DateTime.Now))
+            };
+
+            using (var writer = new StreamWriter(file.Open(FileMode.Create)))
+            {
+                string data = GetTemplate("changelog.tpl").Format(templateParameters);
+                writer.Write(data);
+            }
+        }
+
+        private void GeneratePackageControl(FileInfo file, string nameOverride = null)
+        {
+            JsonDictionary depData = (JsonDictionary)ConfigurationData.TryGetValue("debian_dependencies", null);
+            string depStr = FormatDependentPackageString(depData);
+
+            string packageConflicts = string.Join(", ", ((JsonArray)ConfigurationData["package_conflicts"]).Select(x => ((JsonString)x).Value));
+
+            var templateParameters = new(string, string)[]
+            {
+                ("SHORT_DESCRIPTION", GetConfigString("short_description")),
+                ("LONG_DESCRIPTION", GetConfigString("long_description")),
+                ("HOMEPAGE", GetConfigString("homepage", "")),
+
+                ("SECTION", GetConfigString("section", "misc")),
+                ("PRIORITY", GetConfigString("priority", "low")),
+                ("ARCH", GetConfigString("architecture", "all")),
+
+                ("DEPENDENT_PACKAGES", depStr),
+                ("CONFLICT_PACKAGES", packageConflicts),
+
+                ("PACKAGE_NAME", nameOverride ?? GetConfigString("package_name")),
+                ("MAINTAINER_NAME", GetConfigString("maintainer_name")),
+                ("MAINTAINER_EMAIL", GetConfigString("maintainer_email"))
+            };
+
+            using (var writer = new StreamWriter(file.Open(FileMode.Create)))
+            {
+                string data = GetTemplate("control.tpl").Format(templateParameters);
+                writer.Write(data);
+            }
+        }
+
+        private void GenerateCopyright(FileInfo file)
+        {
+            JsonDictionary licenseData = (JsonDictionary)ConfigurationData["license"];
+
+            var templateParameters = new(string, string)[]
+            {
+                ("COPYRIGHT_TEXT", GetConfigString("copyright")),
+                ("LICENSE_NAME", GetJsonStringValue(licenseData, "type")),
+                ("LICENSE_TEXT", GetJsonStringValue(licenseData, "text"))
+            };
+
+            using (var writer = new StreamWriter(file.Open(FileMode.Create)))
+            {
+                string data = GetTemplate("copyright.tpl").Format(templateParameters);
                 writer.Write(data);
             }
         }
