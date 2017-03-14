@@ -309,7 +309,6 @@ namespace Sunburst.Json
                 if (GetNextChar() != ':')
                 {
                     throw CreateError("Expected colon after dictionary key");
-                    GetNextChar();
                 }
 
                 SkipWhitespace();
