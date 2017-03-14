@@ -24,41 +24,41 @@ using System;
 
 namespace Sunburst.Json
 {
-	public sealed class JsonNull : JsonObject
-	{
-		public static readonly JsonNull Instance = new JsonNull();
+    public sealed class JsonNull : JsonObject
+    {
+        public static readonly JsonNull Instance = new JsonNull();
 
-		private JsonNull() { }
+        private JsonNull() { }
 
-		public override JsonType Type => JsonType.Null;
+        public override JsonType Type => JsonType.Null;
 
-		public override bool Equals(JsonObject other)
-		{
-			if (other.Type != JsonType.Null) return false;
-			JsonNull otherNull = other as JsonNull;
-			if (otherNull == null) return false;
+        public override bool Equals(JsonObject other)
+        {
+            if (other.Type != JsonType.Null) return false;
+            JsonNull otherNull = other as JsonNull;
+            if (otherNull == null) return false;
 
-			return Equals(otherNull);
-		}
+            return Equals(otherNull);
+        }
 
-		// All JsonNull instances are equal.
-		public bool Equals(JsonNull other) => true;
+        // All JsonNull instances are equal.
+        public bool Equals(JsonNull other) => true;
 
-		public override bool Equals(object obj)
-		{
-			if (!obj.GetType().Equals(GetType())) return false;
-			return Equals((JsonNull)obj);
-		}
+        public override bool Equals(object obj)
+        {
+            if (!obj.GetType().Equals(GetType())) return false;
+            return Equals((JsonNull)obj);
+        }
 
-		public override int GetHashCode()
-		{
-			// This is here just to suppress a compiler warning.
-			return base.GetHashCode();
-		}
+        public override int GetHashCode()
+        {
+            // This is here just to suppress a compiler warning.
+            return base.GetHashCode();
+        }
 
-		public override string ToString()
-		{
-			return "[JsonNull]";
-		}
-	}
+        public override string ToString()
+        {
+            return "[JsonNull]";
+        }
+    }
 }

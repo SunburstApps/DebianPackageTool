@@ -24,44 +24,44 @@ using System;
 
 namespace Sunburst.Json
 {
-	public sealed class JsonNumber : JsonObject, IEquatable<JsonNumber>, IEquatable<decimal>
-	{
-		public JsonNumber(decimal val)
-		{
-			Value = val;
-		}
+    public sealed class JsonNumber : JsonObject, IEquatable<JsonNumber>, IEquatable<decimal>
+    {
+        public JsonNumber(decimal val)
+        {
+            Value = val;
+        }
 
-		public override JsonType Type => JsonType.Number;
-		public decimal Value { get; private set; }
-		public long IntegralValue => Convert.ToInt64(Math.Round(Value));
+        public override JsonType Type => JsonType.Number;
+        public decimal Value { get; private set; }
+        public long IntegralValue => Convert.ToInt64(Math.Round(Value));
 
-		public bool Equals(JsonNumber other) => Value == other.Value;
-		public bool Equals(decimal other) => Value == other;
+        public bool Equals(JsonNumber other) => Value == other.Value;
+        public bool Equals(decimal other) => Value == other;
 
-		public override bool Equals(JsonObject other)
-		{
-			if (other.Type != JsonType.Number) return false;
+        public override bool Equals(JsonObject other)
+        {
+            if (other.Type != JsonType.Number) return false;
 
-			JsonNumber otherNumber = other as JsonNumber;
-			if (otherNumber == null) return false;
+            JsonNumber otherNumber = other as JsonNumber;
+            if (otherNumber == null) return false;
 
-			return Value.Equals(otherNumber.Value);
-		}
+            return Value.Equals(otherNumber.Value);
+        }
 
-		public override bool Equals(object obj)
-		{
-			if (!GetType().Equals(obj.GetType())) return false;
-			return Equals((JsonNumber)obj);
-		}
+        public override bool Equals(object obj)
+        {
+            if (!GetType().Equals(obj.GetType())) return false;
+            return Equals((JsonNumber)obj);
+        }
 
-		public override int GetHashCode()
-		{
-			return Value.GetHashCode();
-		}
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
 
-		public override string ToString()
-		{
-			return string.Format("[JsonNumber: Value={0}]", Value);
-		}
-	}
+        public override string ToString()
+        {
+            return string.Format("[JsonNumber: Value={0}]", Value);
+        }
+    }
 }

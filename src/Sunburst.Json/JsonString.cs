@@ -24,43 +24,43 @@ using System;
 
 namespace Sunburst.Json
 {
-	public sealed class JsonString : JsonObject, IEquatable<JsonString>, IEquatable<string>
-	{
-		public JsonString(string val)
-		{
-			Value = val;
-		}
+    public sealed class JsonString : JsonObject, IEquatable<JsonString>, IEquatable<string>
+    {
+        public JsonString(string val)
+        {
+            Value = val;
+        }
 
-		public override JsonType Type => JsonType.String;
-		public string Value { get; private set; }
+        public override JsonType Type => JsonType.String;
+        public string Value { get; private set; }
 
-		public bool Equals(JsonString other) => Value == other.Value;
-		public bool Equals(string other) => Value == other;
+        public bool Equals(JsonString other) => Value == other.Value;
+        public bool Equals(string other) => Value == other;
 
-		public override bool Equals(JsonObject other)
-		{
-			if (other.Type != JsonType.String) return false;
+        public override bool Equals(JsonObject other)
+        {
+            if (other.Type != JsonType.String) return false;
 
-			JsonString otherString = other as JsonString;
-			if (otherString == null) return false;
+            JsonString otherString = other as JsonString;
+            if (otherString == null) return false;
 
-			return otherString.Value == Value;
-		}
+            return otherString.Value == Value;
+        }
 
-		public override bool Equals(object obj)
-		{
-			if (!obj.GetType().Equals(GetType())) return false;
-			return Equals((JsonString)obj);
-		}
+        public override bool Equals(object obj)
+        {
+            if (!obj.GetType().Equals(GetType())) return false;
+            return Equals((JsonString)obj);
+        }
 
-		public override int GetHashCode()
-		{
-			return Value.GetHashCode();
-		}
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
 
-		public override string ToString()
-		{
-			return string.Format("[JsonString: {0}]", Value);
-		}
-	}
+        public override string ToString()
+        {
+            return string.Format("[JsonString: {0}]", Value);
+        }
+    }
 }

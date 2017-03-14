@@ -26,140 +26,140 @@ using System.Text;
 
 namespace Sunburst.Json
 {
-	internal sealed class JsonPrinter
-	{
-		private static void ThrowIfNotStrictCompatibleRoot(JsonObject root)
-		{
-			if (root.Type != JsonType.Dictionary && root.Type != JsonType.Array)
-			{
-				string msg = "Can only write a root object of type Array or Dictionary in strict mode.";
-				throw new JsonWritingException(msg);
-			}
-		}
+    internal sealed class JsonPrinter
+    {
+        private static void ThrowIfNotStrictCompatibleRoot(JsonObject root)
+        {
+            if (root.Type != JsonType.Dictionary && root.Type != JsonType.Array)
+            {
+                string msg = "Can only write a root object of type Array or Dictionary in strict mode.";
+                throw new JsonWritingException(msg);
+            }
+        }
 
-		public static void ObjectToStream(JsonObject root, Stream stream, bool compact, bool strict)
-		{
-			if (!strict) ThrowIfNotStrictCompatibleRoot(root);
+        public static void ObjectToStream(JsonObject root, Stream stream, bool compact, bool strict)
+        {
+            if (!strict) ThrowIfNotStrictCompatibleRoot(root);
 
-			using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8, 512, true))
-			{
-				WriteObject(root, writer, compact, 0);
-			}
-		}
+            using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8, 512, true))
+            {
+                WriteObject(root, writer, compact, 0);
+            }
+        }
 
-		public static string ObjectToString(JsonObject root, bool compact, bool strict)
-		{
-			if (!strict) ThrowIfNotStrictCompatibleRoot(root);
+        public static string ObjectToString(JsonObject root, bool compact, bool strict)
+        {
+            if (!strict) ThrowIfNotStrictCompatibleRoot(root);
 
-			StringWriter writer = new StringWriter();
-			WriteObject(root, writer, compact, 0);
-			return writer.ToString();
-		}
+            StringWriter writer = new StringWriter();
+            WriteObject(root, writer, compact, 0);
+            return writer.ToString();
+        }
 
-		private static void WriteIndent(TextWriter writer, int indentLevel)
-		{
-			for (int i = 0; i < indentLevel; i++) writer.Write('\t');
-		}
+        private static void WriteIndent(TextWriter writer, int indentLevel)
+        {
+            for (int i = 0; i < indentLevel; i++) writer.Write('\t');
+        }
 
-		private static void WriteObject(JsonObject root, TextWriter writer, bool compact, int indentLevel)
-		{
-			if (root.Type == JsonType.Array)
-			{
-				WriteArray((JsonArray)root, writer, compact, indentLevel + 1);
-			}
-			else if (root.Type == JsonType.Dictionary)
-			{
-				WriteDictionary((JsonDictionary)root, writer, compact, indentLevel + 1);
-			}
-			else if (root.Type == JsonType.String)
-			{
-				WriteString(writer, ((JsonString)root).Value);
-			}
-			else if (root.Type == JsonType.Boolean)
-			{
-				JsonBoolean value = (JsonBoolean)root;
-				writer.Write(value.Value ? "true" : "false");
-			}
-			else if (root.Type == JsonType.Number)
-			{
-				JsonNumber value = (JsonNumber)root;
-				writer.Write(value.Value.ToString());
-			}
-			else if (root.Type == JsonType.Null)
-			{
-				writer.Write("null");
-			}
-		}
+        private static void WriteObject(JsonObject root, TextWriter writer, bool compact, int indentLevel)
+        {
+            if (root.Type == JsonType.Array)
+            {
+                WriteArray((JsonArray)root, writer, compact, indentLevel + 1);
+            }
+            else if (root.Type == JsonType.Dictionary)
+            {
+                WriteDictionary((JsonDictionary)root, writer, compact, indentLevel + 1);
+            }
+            else if (root.Type == JsonType.String)
+            {
+                WriteString(writer, ((JsonString)root).Value);
+            }
+            else if (root.Type == JsonType.Boolean)
+            {
+                JsonBoolean value = (JsonBoolean)root;
+                writer.Write(value.Value ? "true" : "false");
+            }
+            else if (root.Type == JsonType.Number)
+            {
+                JsonNumber value = (JsonNumber)root;
+                writer.Write(value.Value.ToString());
+            }
+            else if (root.Type == JsonType.Null)
+            {
+                writer.Write("null");
+            }
+        }
 
-		private static void WriteString(TextWriter writer, string value)
-		{
-			writer.Write('"');
+        private static void WriteString(TextWriter writer, string value)
+        {
+            writer.Write('"');
 
-			foreach (char ch in value)
-			{
-				if (ch == '\r') writer.Write("\\r");
-				else if (ch == '\n') writer.Write("\\n");
-				else if (ch == '\t') writer.Write("\\t");
-				else if (ch == '"') writer.Write("\\\"");
-				else if (ch == '\\') writer.Write("\\\\");
-				else writer.Write(ch);
-			}
+            foreach (char ch in value)
+            {
+                if (ch == '\r') writer.Write("\\r");
+                else if (ch == '\n') writer.Write("\\n");
+                else if (ch == '\t') writer.Write("\\t");
+                else if (ch == '"') writer.Write("\\\"");
+                else if (ch == '\\') writer.Write("\\\\");
+                else writer.Write(ch);
+            }
 
-			writer.Write('"');
-		}
+            writer.Write('"');
+        }
 
-		private static void WriteDictionary(JsonDictionary dict, TextWriter writer, bool compact, int indentLevel)
-		{
-			writer.Write('{');
-			if (!compact) writer.WriteLine();
+        private static void WriteDictionary(JsonDictionary dict, TextWriter writer, bool compact, int indentLevel)
+        {
+            writer.Write('{');
+            if (!compact) writer.WriteLine();
 
-			var keys = dict.Keys.ToArray();
-			int limit = keys.Length;
-			for (int i = 0; i < limit; i++)
-			{
-				string key = keys[i];
-				WriteString(writer, key);
-				writer.Write(':');
-				if (!compact) writer.Write(' ');
+            var keys = dict.Keys.ToArray();
+            int limit = keys.Length;
+            for (int i = 0; i < limit; i++)
+            {
+                string key = keys[i];
+                WriteString(writer, key);
+                writer.Write(':');
+                if (!compact) writer.Write(' ');
 
-				WriteObject(dict[key], writer, compact, indentLevel + 1);
-				if (i != limit) writer.Write(',');
-				if (!compact)
-				{
-					writer.WriteLine();
-					WriteIndent(writer, indentLevel);
-				}
-			}
+                WriteObject(dict[key], writer, compact, indentLevel + 1);
+                if (i != limit) writer.Write(',');
+                if (!compact)
+                {
+                    writer.WriteLine();
+                    WriteIndent(writer, indentLevel);
+                }
+            }
 
-			if (!compact)
-			{
-				writer.WriteLine();
-				WriteIndent(writer, indentLevel);
-			}
+            if (!compact)
+            {
+                writer.WriteLine();
+                WriteIndent(writer, indentLevel);
+            }
 
-			writer.Write('}');
-		}
+            writer.Write('}');
+        }
 
-		private static void WriteArray(JsonArray root, TextWriter writer, bool compact, int indentLevel)
-		{
-			writer.Write('[');
-			if (!compact) writer.WriteLine();
+        private static void WriteArray(JsonArray root, TextWriter writer, bool compact, int indentLevel)
+        {
+            writer.Write('[');
+            if (!compact) writer.WriteLine();
 
-			int limit = root.Count;
-			for (int i = 0; i < limit; i++)
-			{
-				WriteObject(root[i], writer, compact, indentLevel + 1);
-				if (i != limit) writer.Write(',');
-				if (!compact) writer.WriteLine();
-			}
+            int limit = root.Count;
+            for (int i = 0; i < limit; i++)
+            {
+                WriteObject(root[i], writer, compact, indentLevel + 1);
+                if (i != limit) writer.Write(',');
+                if (!compact) writer.WriteLine();
+            }
 
-			if (!compact)
-			{
-				writer.WriteLine();
-				WriteIndent(writer, indentLevel);
-			}
+            if (!compact)
+            {
+                writer.WriteLine();
+                WriteIndent(writer, indentLevel);
+            }
 
-			writer.Write(']');
-		}
-	}
+            writer.Write(']');
+        }
+    }
 }

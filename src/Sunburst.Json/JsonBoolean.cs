@@ -24,43 +24,43 @@ using System;
 
 namespace Sunburst.Json
 {
-	public sealed class JsonBoolean : JsonObject, IEquatable<JsonBoolean>, IEquatable<bool>
-	{
-		public static readonly JsonBoolean True = new JsonBoolean(true);
-		public static readonly JsonBoolean False = new JsonBoolean(false);
+    public sealed class JsonBoolean : JsonObject, IEquatable<JsonBoolean>, IEquatable<bool>
+    {
+        public static readonly JsonBoolean True = new JsonBoolean(true);
+        public static readonly JsonBoolean False = new JsonBoolean(false);
 
-		public JsonBoolean(bool val)
-		{
-			Value = val;
-		}
+        public JsonBoolean(bool val)
+        {
+            Value = val;
+        }
 
-		public override JsonType Type => JsonType.Boolean;
-		public bool Value { get; private set; }
+        public override JsonType Type => JsonType.Boolean;
+        public bool Value { get; private set; }
 
-		public bool Equals(JsonBoolean other) => Value == other.Value;
-		public bool Equals(bool other) => Value == other;
+        public bool Equals(JsonBoolean other) => Value == other.Value;
+        public bool Equals(bool other) => Value == other;
 
-		public override bool Equals(JsonObject other)
-		{
-			if (other.Type != JsonType.Boolean) return false;
+        public override bool Equals(JsonObject other)
+        {
+            if (other.Type != JsonType.Boolean) return false;
 
-			JsonBoolean otherBoolean = other as JsonBoolean;
-			if (otherBoolean == null) return false;
+            JsonBoolean otherBoolean = other as JsonBoolean;
+            if (otherBoolean == null) return false;
 
-			return otherBoolean.Value == Value;
-		}
+            return otherBoolean.Value == Value;
+        }
 
-		public override bool Equals(object obj)
-		{
-			if (!obj.GetType().Equals(GetType())) return false;
-			return Equals((JsonBoolean)obj);
-		}
+        public override bool Equals(object obj)
+        {
+            if (!obj.GetType().Equals(GetType())) return false;
+            return Equals((JsonBoolean)obj);
+        }
 
-		public override int GetHashCode() => Value.GetHashCode();
+        public override int GetHashCode() => Value.GetHashCode();
 
-		public override string ToString()
-		{
-			return string.Format("[JsonBoolean: {0}]", Value);
-		}
-	}
+        public override string ToString()
+        {
+            return string.Format("[JsonBoolean: {0}]", Value);
+        }
+    }
 }
