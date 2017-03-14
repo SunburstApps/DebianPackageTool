@@ -24,7 +24,7 @@ using System;
 
 namespace Sunburst.Json
 {
-    public sealed class JsonNull : JsonObject
+    public sealed class JsonNull : JsonObject, IEquatable<JsonNull>
     {
         public static readonly JsonNull Instance = new JsonNull();
 
