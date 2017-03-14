@@ -10,7 +10,7 @@ namespace Sunburst.DebianPackaging
             return success ? value : default_value;
         }
 
-        public static string Format(this string format, IReadOnlyDictionary<string, string> arguments)
+        public static string Format(this string format, params (string name, string value)[] arguments)
         {
             string result = format;
             result = result.Replace("{{", "{\x01");
@@ -18,8 +18,8 @@ namespace Sunburst.DebianPackaging
 
             foreach (var pair in arguments)
             {
-                string token = string.Concat("{", pair.Key, "}");
-                result = result.Replace(token, pair.Value);
+                string token = string.Concat("{", pair.name, "}");
+                result = result.Replace(token, pair.value);
             }
 
             result = result.Replace("\x01", "");

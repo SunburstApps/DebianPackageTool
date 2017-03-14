@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources/*" LogicalName="%(FileName)%(Extension)" />
+
+    <PackageReference Include="System.ValueTuple" Version="4.3.0" />
     <ProjectReference Include="../Sunburst.Json/Sunburst.Json.csproj" />
   </ItemGroup>
 </Project>
