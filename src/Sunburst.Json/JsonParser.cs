@@ -72,10 +72,10 @@ namespace Sunburst.Json
 
         private char PeekNextChar() => Input[Position];
 
-        private void ThrowError(string format, params object[] args)
+        private JsonParsingException CreateError(string format, params object[] args)
         {
             string msg = string.Format(format, args);
-            throw new JsonParsingException(msg, LineNumber, ColumnNumber);
+            return new JsonParsingException(msg, LineNumber, ColumnNumber);
         }
 
         private void SkipWhitespace()
@@ -121,13 +121,13 @@ namespace Sunburst.Json
                 {
                     var msg = string.Format("Expected to find a root object of type {0}, but instead " +
                                             "found an Array.", expectedValue.ToString());
-                    ThrowError(msg);
+                    throw CreateError(msg);
                 }
                 else if (PeekNextChar() == '{')
                 {
                     var msg = string.Format("Expected to find a root object of type {0}, but instead " +
                                             "found a Dictionary.", expectedValue.ToString());
-                    ThrowError(msg);
+                    throw CreateError(msg);
                 }
             }
 
@@ -137,7 +137,7 @@ namespace Sunburst.Json
                 {
                     var msg = string.Format("Strict mode is enabled, and the root object was not of type " +
                                             "Array or Dictionary. Disable strict mode to parse scalar root types.");
-                    ThrowError(msg);
+                    throw CreateError(msg);
                 }
             }
 
@@ -155,13 +155,12 @@ namespace Sunburst.Json
             else if (PeekNextChar() == '[') return ParseArray();
             else if (PeekNextChar() == '{') return ParseDictionary();
 
-            ThrowError("Expected scalar or container construct");
-            throw new InvalidOperationException("not reached");
+            throw CreateError("Expected scalar or container construct");
         }
 
         private JsonString ParseString()
         {
-            if (GetNextChar() != '"') ThrowError("Expected opening quote in string scalar.");
+            if (GetNextChar() != '"') throw CreateError("Expected opening quote in string scalar.");
 
 
             var builder = new StringBuilder();
@@ -183,7 +182,7 @@ namespace Sunburst.Json
                     else if (ch == 't') builder.Append('\t');
                     else if (ch == '"') builder.Append('"');
                     else if (ch == '\\') builder.Append('\\');
-                    else ThrowError("Unrecognized string backslash escape sequence '\\{0}'", ch);
+                    else throw CreateError("Unrecognized string backslash escape sequence '\\{0}'", ch);
 
                     previousBackslash = false;
                 }
@@ -220,7 +219,7 @@ namespace Sunburst.Json
             decimal value;
             if (!decimal.TryParse(builder.ToString(), out value))
             {
-                ThrowError("Invalid numeric literal {0}", builder.ToString());
+                throw CreateError("Invalid numeric literal {0}", builder.ToString());
             }
 
             return new JsonNumber(value);
@@ -236,8 +235,7 @@ namespace Sunburst.Json
             return JsonNull.Instance;
 
         error:
-            ThrowError("Invalid null literal syntax");
-            throw new InvalidOperationException("not reached");
+            throw CreateError("Invalid null literal syntax");
         }
 
         private JsonBoolean ParseBoolean()
@@ -261,13 +259,12 @@ namespace Sunburst.Json
             }
 
         error:
-            ThrowError("Invalid boolean literal syntax");
-            throw new InvalidOperationException("not reached");
+            throw CreateError("Invalid boolean literal syntax");
         }
 
         private JsonArray ParseArray()
         {
-            if (GetNextChar() != '[') ThrowError("Expected '[' to begin array construct");
+            if (GetNextChar() != '[') throw CreateError("Expected '[' to begin array construct");
             JsonArray retval = new JsonArray();
 
             bool continueLoop = true, seenComma = false;
@@ -282,10 +279,9 @@ namespace Sunburst.Json
                 }
                 else if (PeekNextChar() == ']')
                 {
-                    if (seenComma) ThrowError("Comma cannot precede end of array construct");
-                    else break;
-
+                    if (seenComma) throw CreateError("Comma cannot precede end of array construct");
                     GetNextChar();
+                    break;
                 }
                 else
                 {
@@ -294,13 +290,13 @@ namespace Sunburst.Json
                 }
             } while (continueLoop);
 
-            if (GetNextChar() != ']') ThrowError("Expected ']' to end array construct");
+            if (GetNextChar() != ']') throw CreateError("Expected ']' to end array construct");
             return retval;
         }
 
         private JsonDictionary ParseDictionary()
         {
-            if (GetNextChar() != '{') ThrowError("Expected '{{' to begin dictionary construct");
+            if (GetNextChar() != '{') throw CreateError("Expected '{{' to begin dictionary construct");
             JsonDictionary retval = new JsonDictionary();
 
             bool continueLoop = true, seenComma = false;
@@ -313,7 +309,7 @@ namespace Sunburst.Json
                 SkipWhitespace();
                 if (GetNextChar() != ':')
                 {
-                    ThrowError("Expected colon after dictionary key");
+                    throw CreateError("Expected colon after dictionary key");
                     GetNextChar();
                 }
 
@@ -333,7 +329,7 @@ namespace Sunburst.Json
 
                 if (PeekNextChar() == '}')
                 {
-                    if (seenComma) ThrowError("Comma cannot precede end of dictionary construct");
+                    if (seenComma) throw CreateError("Comma cannot precede end of dictionary construct");
                     continueLoop = false;
                 }
                 else
@@ -342,7 +338,7 @@ namespace Sunburst.Json
                 }
             } while (continueLoop);
 
-            if (GetNextChar() != '}') ThrowError("Expected '}' to end dictionary construct");
+            if (GetNextChar() != '}') throw CreateError("Expected '}' to end dictionary construct");
             return retval;
         }
     }
