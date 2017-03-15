@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BA229CAB-6325-4A16-896C-1AAE847172B3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunburst.Json", "src\Sunburst.Json\Sunburst.Json.csproj", "{6B188393-4552-460C-B41F-22FACA88604D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunburst.DebianPackaging", "src\Sunburst.DebianPackaging\Sunburst.DebianPackaging.csproj", "{1DE7C93D-F096-4225-B5D7-22C7E171E79E}"
@@ -46,9 +44,5 @@ Global
 		{1DE7C93D-F096-4225-B5D7-22C7E171E79E}.Release|x64.Build.0 = Release|x64
 		{1DE7C93D-F096-4225-B5D7-22C7E171E79E}.Release|x86.ActiveCfg = Release|x86
 		{1DE7C93D-F096-4225-B5D7-22C7E171E79E}.Release|x86.Build.0 = Release|x86
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{6B188393-4552-460C-B41F-22FACA88604D} = {BA229CAB-6325-4A16-896C-1AAE847172B3}
-		{1DE7C93D-F096-4225-B5D7-22C7E171E79E} = {BA229CAB-6325-4A16-896C-1AAE847172B3}
 	EndGlobalSection
 EndGlobal
