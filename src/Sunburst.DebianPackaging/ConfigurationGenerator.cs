@@ -90,6 +90,18 @@ namespace Sunburst.DebianPackaging
             MyAssembly = typeof(ConfigurationGenerator).Assembly;
         }
 
+        public void Generate(DirectoryInfo outputDirectory, string nameOverride = null, string versionOverride = null)
+        {
+            GenerateChangeLog(outputDirectory.GetFile("changelog"), nameOverride: nameOverride, versionOverride: versionOverride);
+            GeneratePackageControl(outputDirectory.GetFile("control"), nameOverride: nameOverride);
+            GenerateCopyright(outputDirectory.GetFile("copyright"));
+            GenerateRulesFile(outputDirectory.GetFile("rules"));
+
+            string packageName = nameOverride ?? GetConfigString("package_name");
+            string symlinkFileName = packageName + ".links";
+            GenerateSymlinksFile(outputDirectory.GetFile(symlinkFileName), nameOverride: nameOverride);
+        }
+
         private readonly JsonDictionary ConfigurationData;
         private readonly Assembly MyAssembly;
 
@@ -209,6 +221,35 @@ namespace Sunburst.DebianPackaging
             {
                 string data = GetTemplate("copyright.tpl").Format(templateParameters);
                 writer.Write(data);
+            }
+        }
+
+        private string GetPackageRootDirectory(string nameOverride = null)
+        {
+            string configRoot = GetConfigString("install_root", null);
+            string defaultRoot = "/usr/share/" + (nameOverride ?? GetConfigString("package_name"));
+            return configRoot ?? defaultRoot;
+        }
+
+        private void GenerateSymlinksFile(FileInfo file, string nameOverride = null)
+        {
+            JsonDictionary symlinkData = (JsonDictionary)ConfigurationData.TryGetValue("symlinks", null);
+            if (symlinkData != null)
+            {
+                string packageRoot = GetPackageRootDirectory(nameOverride);
+                List<string> symlinkEntries = new List<string>();
+
+                foreach (var pair in symlinkData)
+                {
+                    string packageAbsPath = packageRoot + "/" + pair.Key;
+                    symlinkEntries.Add($"{packageAbsPath} {pair.Value}");
+                }
+
+                string data = string.Join("\n", symlinkEntries);
+                using (var writer = new StreamWriter(file.Open(FileMode.Create)))
+                {
+                    writer.Write(data);
+                }
             }
         }
     }
