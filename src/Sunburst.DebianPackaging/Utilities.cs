@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 
 namespace Sunburst.DebianPackaging
 {
@@ -24,6 +25,16 @@ namespace Sunburst.DebianPackaging
 
             result = result.Replace("\x01", "");
             return result;
+        }
+
+        public static FileInfo GetFile(this DirectoryInfo dir, string name)
+        {
+            return new FileInfo(Path.Combine(dir.FullName, name));
+        }
+
+        public static DirectoryInfo GetSubdirectory(this DirectoryInfo dir, string name)
+        {
+            return new DirectoryInfo(Path.Combine(dir.FullName, name));
         }
     }
 }
