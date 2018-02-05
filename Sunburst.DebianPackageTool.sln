@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunburst.DebianPackaging", "src\Sunburst.DebianPackaging\Sunburst.DebianPackaging.csproj", "{1DE7C93D-F096-4225-B5D7-22C7E171E79E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunburst.DebianPackaging.CommandLine", "src\Sunburst.DebianPackaging.CommandLine\Sunburst.DebianPackaging.CommandLine.csproj", "{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,18 @@ Global
 		{1DE7C93D-F096-4225-B5D7-22C7E171E79E}.Release|x64.Build.0 = Release|x64
 		{1DE7C93D-F096-4225-B5D7-22C7E171E79E}.Release|x86.ActiveCfg = Release|x86
 		{1DE7C93D-F096-4225-B5D7-22C7E171E79E}.Release|x86.Build.0 = Release|x86
+		{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}.Debug|x64.Build.0 = Debug|Any CPU
+		{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}.Debug|x86.Build.0 = Debug|Any CPU
+		{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}.Release|x64.ActiveCfg = Release|Any CPU
+		{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}.Release|x64.Build.0 = Release|Any CPU
+		{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}.Release|x86.ActiveCfg = Release|Any CPU
+		{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
