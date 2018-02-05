@@ -8,6 +8,5 @@
 
     <PackageReference Include="System.ValueTuple" Version="4.3.0" />
     <PackageReference Include="System.Json" Version="4.4.0" />
-    <ProjectReference Include="../Sunburst.Json/Sunburst.Json.csproj" />
   </ItemGroup>
 </Project>

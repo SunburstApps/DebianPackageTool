@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunburst.Json", "src\Sunburst.Json\Sunburst.Json.csproj", "{6B188393-4552-460C-B41F-22FACA88604D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunburst.DebianPackaging", "src\Sunburst.DebianPackaging\Sunburst.DebianPackaging.csproj", "{1DE7C93D-F096-4225-B5D7-22C7E171E79E}"
 EndProject
 Global
@@ -20,18 +18,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6B188393-4552-460C-B41F-22FACA88604D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B188393-4552-460C-B41F-22FACA88604D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B188393-4552-460C-B41F-22FACA88604D}.Debug|x64.ActiveCfg = Debug|x64
-		{6B188393-4552-460C-B41F-22FACA88604D}.Debug|x64.Build.0 = Debug|x64
-		{6B188393-4552-460C-B41F-22FACA88604D}.Debug|x86.ActiveCfg = Debug|x86
-		{6B188393-4552-460C-B41F-22FACA88604D}.Debug|x86.Build.0 = Debug|x86
-		{6B188393-4552-460C-B41F-22FACA88604D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B188393-4552-460C-B41F-22FACA88604D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B188393-4552-460C-B41F-22FACA88604D}.Release|x64.ActiveCfg = Release|x64
-		{6B188393-4552-460C-B41F-22FACA88604D}.Release|x64.Build.0 = Release|x64
-		{6B188393-4552-460C-B41F-22FACA88604D}.Release|x86.ActiveCfg = Release|x86
-		{6B188393-4552-460C-B41F-22FACA88604D}.Release|x86.Build.0 = Release|x86
 		{1DE7C93D-F096-4225-B5D7-22C7E171E79E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1DE7C93D-F096-4225-B5D7-22C7E171E79E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DE7C93D-F096-4225-B5D7-22C7E171E79E}.Debug|x64.ActiveCfg = Debug|x64
@@ -44,5 +30,22 @@ Global
 		{1DE7C93D-F096-4225-B5D7-22C7E171E79E}.Release|x64.Build.0 = Release|x64
 		{1DE7C93D-F096-4225-B5D7-22C7E171E79E}.Release|x86.ActiveCfg = Release|x86
 		{1DE7C93D-F096-4225-B5D7-22C7E171E79E}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.TabWidth = 2
+		$1.TabsToSpaces = True
+		$1.IndentWidth = 2
+		$1.scope = application/x-csproject
+		$0.TextStylePolicy = $2
+		$2.TabsToSpaces = True
+		$2.scope = text/x-csharp
+		$0.TextStylePolicy = $3
+		$3.TabsToSpaces = True
+		$3.scope = application/octet-stream
+		$0.TextStylePolicy = $4
+		$4.TabsToSpaces = True
+		$4.scope = text/x-html
 	EndGlobalSection
 EndGlobal
