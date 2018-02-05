@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Json;
 using System.Reflection;
 using System.Text;
-using Sunburst.Json;
 
 namespace Sunburst.DebianPackaging
 {
@@ -61,20 +61,20 @@ namespace Sunburst.DebianPackaging
             return formattedDate.ToString();
         }
 
-        private static string FormatDependentPackageString(JsonDictionary dependencyData)
+        private static string FormatDependentPackageString(JsonObject dependencyData)
         {
             if (dependencyData == null) return string.Empty;
 
             List<string> dependencies = new List<string>();
-            foreach (KeyValuePair<string, JsonObject> pair in dependencyData)
+            foreach (KeyValuePair<string, JsonValue> pair in dependencyData)
             {
                 string dep_str = pair.Key;
 
-                JsonDictionary value = (JsonDictionary)pair.Value;
-                JsonObject dependencyVersionObj = value.TryGetValue("package_version", null);
+                JsonObject value = (JsonObject)pair.Value;
+                JsonValue dependencyVersionObj = value.TryGetValue("package_version", null);
                 if (dependencyVersionObj != null)
                 {
-                    dep_str += $" (>= {((JsonString)dependencyVersionObj).Value})";
+                    dep_str += $" (>= {(string)dependencyVersionObj})";
                 }
 
                 dependencies.Add(dep_str);
@@ -84,7 +84,7 @@ namespace Sunburst.DebianPackaging
             return ", " + string.Join(", ", dependencies);
         }
 
-        public ConfigurationGenerator(JsonDictionary config_data)
+        public ConfigurationGenerator(JsonObject config_data)
         {
             ConfigurationData = config_data;
             MyAssembly = typeof(ConfigurationGenerator).Assembly;
@@ -102,18 +102,18 @@ namespace Sunburst.DebianPackaging
             GenerateSymlinksFile(outputDirectory.GetFile(symlinkFileName), nameOverride: nameOverride);
         }
 
-        private readonly JsonDictionary ConfigurationData;
+        private readonly JsonObject ConfigurationData;
         private readonly Assembly MyAssembly;
 
         private string GetConfigString(string key) => GetConfigString(key, null) ?? throw new KeyNotFoundException(key);
         private string GetConfigString(string key, string defaultValue) => GetJsonStringValue(ConfigurationData, key, defaultValue);
-        private string GetJsonStringValue(JsonDictionary dict, string key) => GetJsonStringValue(dict, key, null) ?? throw new KeyNotFoundException(key);
+        private string GetJsonStringValue(JsonObject dict, string key) => GetJsonStringValue(dict, key, null) ?? throw new KeyNotFoundException(key);
 
-        private string GetJsonStringValue(JsonDictionary dict, string key, string defaultValue)
+        private string GetJsonStringValue(JsonObject dict, string key, string defaultValue)
         {
-            JsonObject obj = dict[key];
+            JsonValue obj = dict[key];
             if (obj == null) return defaultValue;
-            else return ((JsonString)obj).Value;
+            else return obj;
         }
 
         private string GetTemplate(string templateName)
@@ -134,10 +134,9 @@ namespace Sunburst.DebianPackaging
                 overrideText.Append("override_dh_shlibdeps:\n");
                 overrideText.Append("\tdh_shlibdeps --dpkg-shlibdeps-params=\"");
 
-                foreach (JsonObject obj in ignoredDependencies)
+                foreach (JsonValue obj in ignoredDependencies)
                 {
-                    JsonString depName = (JsonString)obj;
-                    overrideText.AppendFormat("-x{0} ", depName.Value);
+                    overrideText.AppendFormat("-x{0} ", (string)obj);
                 }
 
                 overrideText.Append("\"\n");
@@ -152,7 +151,7 @@ namespace Sunburst.DebianPackaging
 
         private void GenerateChangeLog(FileInfo file, string versionOverride = null, string nameOverride = null)
         {
-            JsonDictionary releaseData = (JsonDictionary)ConfigurationData["release"];
+            JsonObject releaseData = (JsonObject)ConfigurationData["release"];
 
             var templateParameters = new(string, string)[]
             {
@@ -176,10 +175,10 @@ namespace Sunburst.DebianPackaging
 
         private void GeneratePackageControl(FileInfo file, string nameOverride = null)
         {
-            JsonDictionary depData = (JsonDictionary)ConfigurationData.TryGetValue("debian_dependencies", null);
+            JsonObject depData = (JsonObject)ConfigurationData.TryGetValue("debian_dependencies", null);
             string depStr = FormatDependentPackageString(depData);
 
-            string packageConflicts = string.Join(", ", ((JsonArray)ConfigurationData["package_conflicts"]).Select(x => ((JsonString)x).Value));
+            string packageConflicts = string.Join(", ", ((JsonArray)ConfigurationData["package_conflicts"]).Select(x => (string)x));
 
             var templateParameters = new(string, string)[]
             {
@@ -208,7 +207,7 @@ namespace Sunburst.DebianPackaging
 
         private void GenerateCopyright(FileInfo file)
         {
-            JsonDictionary licenseData = (JsonDictionary)ConfigurationData["license"];
+            JsonObject licenseData = (JsonObject)ConfigurationData["license"];
 
             var templateParameters = new(string, string)[]
             {
@@ -233,7 +232,7 @@ namespace Sunburst.DebianPackaging
 
         private void GenerateSymlinksFile(FileInfo file, string nameOverride = null)
         {
-            JsonDictionary symlinkData = (JsonDictionary)ConfigurationData.TryGetValue("symlinks", null);
+            JsonObject symlinkData = (JsonObject)ConfigurationData.TryGetValue("symlinks", null);
             if (symlinkData != null)
             {
                 string packageRoot = GetPackageRootDirectory(nameOverride);
