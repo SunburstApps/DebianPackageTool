@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunburst.DebianPackaging", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sunburst.DebianPackaging.CommandLine", "src\Sunburst.DebianPackaging.CommandLine\Sunburst.DebianPackaging.CommandLine.csproj", "{ACEFBD2B-17C4-455E-94AB-B8E63215DD7D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Tools", "Build Tools", "{1AFCEB38-5754-443B-9DB2-99170AEF4A5B}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet.config = NuGet.config
+		src\Directory.Build.props = src\Directory.Build.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
