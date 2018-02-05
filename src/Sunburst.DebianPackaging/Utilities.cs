@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -35,6 +36,14 @@ namespace Sunburst.DebianPackaging
         public static DirectoryInfo GetSubdirectory(this DirectoryInfo dir, string name)
         {
             return new DirectoryInfo(Path.Combine(dir.FullName, name));
+        }
+
+        public static T ParseEnum<T>(string text, bool ignoreCase = true)
+        {
+            Type type = typeof(T);
+            if (!type.IsEnum) throw new InvalidOperationException($"Cannot call {nameof(ParseEnum)} with non-enum type {type.FullName}");
+
+            return (T)Enum.Parse(type, text, ignoreCase);
         }
     }
 }
