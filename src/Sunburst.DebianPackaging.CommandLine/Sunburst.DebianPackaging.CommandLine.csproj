@@ -6,6 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../Sunburst.DebianPackaging/Sunburst.DebianPackaging.csproj" />
-    <PackageReference Include="System.CommandLine" Version="1.0.0.4" />
+    <PackageReference Include="System.CommandLine" Version="0.1.0-preview2-*" />
   </ItemGroup>
 </Project>
