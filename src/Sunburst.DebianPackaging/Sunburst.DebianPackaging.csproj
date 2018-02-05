@@ -4,6 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources/*" />
     <EmbeddedResource Include="Resources/*" LogicalName="%(FileName)%(Extension)" />
 
     <PackageReference Include="System.ValueTuple" Version="4.3.0" />
